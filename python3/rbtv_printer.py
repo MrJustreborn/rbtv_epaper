@@ -8,6 +8,8 @@ from PIL import Image,ImageDraw,ImageFont
 import requests
 from io import BytesIO
 
+def string_normalizer(str: str):
+    return str.replace('’s', "'s")
 
 def getTime(time: datetime):
     return ('0' if time.hour < 10 else '') + str(time.hour) +':'+ ('0' if time.minute < 10 else '') + str(time.minute)
@@ -36,10 +38,20 @@ def printCurrent(image, draw: ImageDraw, show, timeStart: datetime, timeEnd: dat
     draw.rectangle((10 + 10 + width + 2, ypos - lowborder - height + 2, 10 + 10 + width + 2 + width2, ypos - lowborder - 2), 0)
 
 
-    title = str(show['title'])
-    title = title.replace('Let’s', "Let's")
+    title = string_normalizer(str(show['title']))
+    title = title +' - '+ (show['topic'] if show['topic'] else show['game'])
     width2, height = draw.textsize(title, font=font24)
-    draw.text((10 + 10 + width, ypos - lowborder - height - height - height + 5), title +'\n'+ (show['topic'] if show['topic'] else show['game']), font = font24, fill = 0)
+
+    wasModified = False
+    while width2 > 420:
+        title = title[:-1]
+        width2, height = draw.textsize(title, font=font24)
+        wasModified = True
+    
+    if wasModified:
+        title = title + " ..."
+
+    draw.text((10 + 10 + width, ypos - lowborder - height - height + 5), title, font = font24, fill = 0)
 
     r = requests.get(show['episodeImage'])
     

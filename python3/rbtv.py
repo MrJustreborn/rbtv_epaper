@@ -78,8 +78,7 @@ class RBTV:
                 continue
 
             width, height = draw.textsize(rbtv_printer.getTime(timeStart), font=self.fontSmal)
-            title = str(shows[i]['title'])
-            title = title.replace('Let’s', "Let´")
+            title = rbtv_printer.string_normalizer(str(shows[i]['title']))
             draw.text((10 + 10 + width, 35 * pos + 230), rbtv_printer.getTime(timeStart) +' '+ title, font = self.fontSmal, fill = 0)
             pos += 1
             if pos > 5:
