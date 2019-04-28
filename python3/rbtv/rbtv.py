@@ -35,20 +35,11 @@ class RBTV:
         
         draw = ImageDraw.Draw(img)
         draw.text((5, 1), utils.getTime(today), font = self.fontBig, fill = 0)
-        #draw.text((0, 0), "   ", font = self.fontAwesome)
-        views = rest.getRBViews()
-        width, height = draw.textsize("\n", font = self.fontAwesomeBrands)
-        h = 90
-        draw.multiline_text((5, h), "\n", font = self.fontAwesomeBrands, align = 'right')
-        draw.multiline_text((5, h + height + 2), "", font = self.fontAwesome, align = 'right')
-        draw.multiline_text((5 + width + 5, h), str(views['data']['twitch'])
-            +'\n'+str(views['data']['youtube'])
-            +'\n'+str(views['data']['total'])
-            , font = self.fontAwesome, align = 'left')
+
+        rbtv_printer.printViews((5, 90), draw, rest.getRBViews())
 
 
         print(utils.parseTime(data['data'][0]['date']))
-        #shows = data['data'][0]['elements']
 
         shows = []
 
