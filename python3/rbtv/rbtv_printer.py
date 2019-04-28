@@ -11,20 +11,44 @@ from io import BytesIO
 import rbtv.rbtv_config as rbtv_config
 import utils
 
-def printViews(xy, draw: ImageDraw, views = {'data':{'total':0,'twitch':0,'youtube':0}}):
+def printViews(xy, draw: ImageDraw, views = {'data':{'total':0,'twitch':0,'youtube':0}}, alignment = "hicons"):
     x = xy[0]
     y = xy[1]
 
-    w, h = draw.textsize("", font = rbtv_config.fontAwesomeBrands)
-    w2, h2 = draw.textsize("123", font = rbtv_config.fontSmal)
+    if alignment == "hicons":
+        w, h = draw.textsize("", font = rbtv_config.fontAwesomeBrands)
 
-    draw.text((x + 7, y), "", font = rbtv_config.fontAwesomeBrands) #twitch
-    draw.text((x, y + h), "", font = rbtv_config.fontAwesomeBrands) #youtube
-    draw.text((x, y + h * 2), "", font = rbtv_config.fontAwesome) #total
+        draw.text((x + 7, y), "", font = rbtv_config.fontAwesomeBrands) #twitch
+        draw.text((x, y + h), "", font = rbtv_config.fontAwesomeBrands) #youtube
+        draw.text((x, y + h * 2), "", font = rbtv_config.fontAwesome) #total
 
-    v = str(views['data']['twitch'])+'\n'+str(views['data']['youtube'])+'\n'+str(views['data']['total'])
-    #w2, h2 = draw.textsize(v, font = rbtv_config.fontSmal)
-    draw.multiline_text((x + w + 20, y - 4), v, font = rbtv_config.fontSmal, align = "right", spacing = 0)
+        v = str(views['data']['twitch'])+'\n'+str(views['data']['youtube'])+'\n'+str(views['data']['total'])
+        draw.multiline_text((x + w + 20, y - 4), v, font = rbtv_config.fontSmal, align = "right", spacing = 0)
+    elif alignment == "hdigit":
+        v = str(views['data']['twitch'])+'\n'+str(views['data']['youtube'])+'\n'+str(views['data']['total'])
+        draw.multiline_text((x, y - 4), v, font = rbtv_config.fontSmal, align = "right", spacing = 0)
+
+        w, h = draw.textsize("", font = rbtv_config.fontAwesomeBrands)
+        w2, h2 = draw.textsize(v, font = rbtv_config.fontSmal)
+
+        draw.text((x + w2 + 7, y), "", font = rbtv_config.fontAwesomeBrands) #twitch
+        draw.text((x + w2 + 4, y + h), "", font = rbtv_config.fontAwesomeBrands) #youtube
+        draw.text((x + w2 + 4, y + h * 2), "", font = rbtv_config.fontAwesome) #total
+    elif alignment == "vicons":
+        w, h = draw.textsize("", font = rbtv_config.fontAwesomeBrands)
+        w2, h2 = draw.textsize(str(views['data']['twitch']), font = rbtv_config.fontSmal)
+        draw.text((x, y), "", font = rbtv_config.fontAwesomeBrands) #twitch
+        draw.text((x + w, y - 4), str(views['data']['twitch']), font = rbtv_config.fontSmal) #twitch
+        tmpW = w + w2 + 5
+        w, h = draw.textsize("", font = rbtv_config.fontAwesomeBrands)
+        w2, h2 = draw.textsize(str(views['data']['youtube']), font = rbtv_config.fontSmal)
+        draw.text((x + tmpW, y - 2), "", font = rbtv_config.fontAwesomeBrands) #youtube
+        draw.text((x + tmpW + w, y - 4), str(views['data']['youtube']), font = rbtv_config.fontSmal) #youtube
+        tmpW = tmpW + w + w2 + 5
+        w, h = draw.textsize("", font = rbtv_config.fontAwesome)
+        w2, h2 = draw.textsize(str(views['data']['total']), font = rbtv_config.fontSmal)
+        draw.text((x + tmpW, y - 2), "", font = rbtv_config.fontAwesome) #total
+        draw.text((x + tmpW + w, y - 4), str(views['data']['total']), font = rbtv_config.fontSmal) #total
 
 def printCurrent(image, draw: ImageDraw, show, timeStart: datetime, timeEnd: datetime, today: datetime, font24):
     lowborder = 10
