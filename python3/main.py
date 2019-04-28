@@ -3,7 +3,7 @@
 
 #import epd5in83
 import traceback
-import rbtv
+import rbtv.rbtv as rbtv
 
 def main():
     try:

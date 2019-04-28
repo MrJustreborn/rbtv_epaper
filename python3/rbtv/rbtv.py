@@ -1,6 +1,6 @@
 
-import rbtv_config
-import rbtv_printer
+import rbtv.rbtv_config as rbtv_config
+import rbtv.rbtv_printer as rbtv_printer
 
 import time
 from datetime import datetime,timedelta
