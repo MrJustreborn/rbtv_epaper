@@ -32,11 +32,19 @@ class RBTV:
         data = rest.getRBData(today)
 
         img = Image.new('1', (self.width, self.height), 255)
-        
         draw = ImageDraw.Draw(img)
-        draw.text((5, 1), utils.getTime(today), font = self.fontBig, fill = 0)
 
-        rbtv_printer.printViews((5, 90), draw, rest.getRBViews())
+        #clock
+        draw.rectangle((0, 25, 500, 87), fill=0)
+        draw.text((0, 12), utils.getTime(today), font = self.fontBig, fill = 255)
+        draw.text((190, 28), utils.getWeekday(today), font = self.fontSmal, fill = 255)
+        draw.text((190, 55), utils.getDate(today), font = self.fontSmal, fill = 255)
+
+        #notifications
+        #draw.text((2, 2), '    ', font = self.fontAwesome, fill = 0)
+
+        #views
+        rbtv_printer.printViews((230, 95), draw, rest.getRBViews())
 
 
         print(utils.parseTime(data['data'][0]['date']))

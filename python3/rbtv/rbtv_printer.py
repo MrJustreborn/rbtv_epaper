@@ -11,7 +11,7 @@ from io import BytesIO
 import rbtv.rbtv_config as rbtv_config
 import utils
 
-def printViews(xy, draw: ImageDraw, views = {'data':{'total':0,'twitch':0,'youtube':0}}, alignment = "hicons"):
+def printViews(xy, draw: ImageDraw, views = {'data':{'total':0,'twitch':0,'youtube':0}}, alignment = "hdigit"):
     x = xy[0]
     y = xy[1]
 
