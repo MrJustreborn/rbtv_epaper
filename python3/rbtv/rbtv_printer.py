@@ -37,7 +37,7 @@ def printCurrent(image, draw: ImageDraw, show, timeStart: datetime, timeEnd: dat
     draw.text((600 - 10 - width, ypos - lowborder - height), utils.getTime(timeEnd), font = font24, fill = 0)
 
 
-    draw.rectangle((10 + 10 + width, ypos - lowborder - height, 600 - 10 - width - 10, ypos - lowborder))
+    draw.rectangle((10 + 10 + width, ypos - lowborder - height + 2, 600 - 10 - width - 10, ypos - lowborder + 2))
 
     width2 = 600 - 10 - width - 10 - 2 - (10 + 10 + width + 2)
     sts = datetime.timestamp(timeStart)
@@ -46,7 +46,7 @@ def printCurrent(image, draw: ImageDraw, show, timeStart: datetime, timeEnd: dat
 
     width2 = width2 * (tts-sts)/(ets-sts)
 
-    draw.rectangle((10 + 10 + width + 2, ypos - lowborder - height + 2, 10 + 10 + width + 2 + width2, ypos - lowborder - 2), 0)
+    draw.rectangle((10 + 10 + width + 2, ypos - lowborder - height + 4, 10 + 10 + width + 2 + width2, ypos - lowborder - 0), 0)
 
 
     title = utils.string_normalizer(str(show['title']))
