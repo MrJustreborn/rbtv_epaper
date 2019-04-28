@@ -8,22 +8,17 @@ from PIL import Image,ImageDraw,ImageFont
 import requests
 from io import BytesIO
 
-def string_normalizer(str: str):
-    return str.replace('’s', "'s")
-
-def getTime(time: datetime):
-    return ('0' if time.hour < 10 else '') + str(time.hour) +':'+ ('0' if time.minute < 10 else '') + str(time.minute)
-
+import utils
 
 def printCurrent(image, draw: ImageDraw, show, timeStart: datetime, timeEnd: datetime, today: datetime, font24):
     lowborder = 10
     ypos = 230
 
-    width, height = draw.textsize(getTime(timeStart), font=font24)
-    draw.text((10, ypos - lowborder - height), getTime(timeStart), font = font24, fill = 0)
+    width, height = draw.textsize(utils.getTime(timeStart), font=font24)
+    draw.text((10, ypos - lowborder - height), utils.getTime(timeStart), font = font24, fill = 0)
 
-    width, height = draw.textsize(getTime(timeEnd), font=font24)
-    draw.text((600 - 10 - width, ypos - lowborder - height), getTime(timeEnd), font = font24, fill = 0)
+    width, height = draw.textsize(utils.getTime(timeEnd), font=font24)
+    draw.text((600 - 10 - width, ypos - lowborder - height), utils.getTime(timeEnd), font = font24, fill = 0)
 
 
     draw.rectangle((10 + 10 + width, ypos - lowborder - height, 600 - 10 - width - 10, ypos - lowborder))
@@ -38,7 +33,7 @@ def printCurrent(image, draw: ImageDraw, show, timeStart: datetime, timeEnd: dat
     draw.rectangle((10 + 10 + width + 2, ypos - lowborder - height + 2, 10 + 10 + width + 2 + width2, ypos - lowborder - 2), 0)
 
 
-    title = string_normalizer(str(show['title']))
+    title = utils.string_normalizer(str(show['title']))
     title = title +' - '+ (show['topic'] if show['topic'] else show['game'])
     width2, height = draw.textsize(title, font=font24)
 
