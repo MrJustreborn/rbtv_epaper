@@ -18,6 +18,8 @@ class RBTV:
         self.fontBig = rbtv_config.fontBig
         self.width = rbtv_config.screen_width
         self.height = rbtv_config.screen_height
+        self.live = rbtv_config.live
+        self.neu = rbtv_config.neu
     
     def getRBData(self, today: datetime):
         print(today)
@@ -46,7 +48,7 @@ class RBTV:
         img = Image.new('1', (self.width, self.height), 255)
         
         draw = ImageDraw.Draw(img)
-        draw.text((10,10), rbtv_printer.getTime(today), font = self.fontBig, fill = 0)
+        draw.text((40,30), rbtv_printer.getTime(today), font = self.fontBig, fill = 0)
         #draw.text((10,100), str(today.day) +'. '+ str(today.month) +'. '+ str(today.year), font = font24, fill = 0)
         #logo = Image.open('/home/mrjustreborn/Dev/PI/epaper/Cornerlogo_rbtv_151152.bmp')
         #img.paste(logo,  (0,0))
@@ -80,6 +82,12 @@ class RBTV:
             width, height = draw.textsize(rbtv_printer.getTime(timeStart), font=self.fontSmal)
             title = rbtv_printer.string_normalizer(str(shows[i]['title']))
             draw.text((10 + 10 + width, 35 * pos + 230), rbtv_printer.getTime(timeStart) +' '+ title, font = self.fontSmal, fill = 0)
+
+            if shows[i]['type'] == 'premiere':
+                img.paste(self.neu, (10, 35 * pos + 230))
+            elif shows[i]['type'] == 'live':
+                img.paste(self.live, (10, 35 * pos + 230))
+
             pos += 1
             if pos > 5:
                 break
