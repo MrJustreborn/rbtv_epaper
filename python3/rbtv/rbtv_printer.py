@@ -11,10 +11,11 @@ from io import BytesIO
 import rbtv.rbtv_config as rbtv_config
 import utils
 
-def printViews(xy, draw: ImageDraw, views = {'data':{'total':0,'twitch':0,'youtube':0}}, alignment = "hdigit"):
+def printViews(xy, img: Image, views = {'data':{'total':0,'twitch':0,'youtube':0}}, alignment = "hdigit"):
     x = xy[0]
     y = xy[1]
 
+    draw = ImageDraw.Draw(img)
     if alignment == "hicons":
         w, h = draw.textsize("", font = rbtv_config.fontAwesomeBrands)
 
@@ -50,7 +51,9 @@ def printViews(xy, draw: ImageDraw, views = {'data':{'total':0,'twitch':0,'youtu
         draw.text((x + tmpW, y - 2), "", font = rbtv_config.fontAwesome) #total
         draw.text((x + tmpW + w, y - 4), str(views['data']['total']), font = rbtv_config.fontSmal) #total
 
-def printCurrent(image, draw: ImageDraw, show, timeStart: datetime, timeEnd: datetime, today: datetime, font24):
+def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, today: datetime, font24):
+    draw = ImageDraw.Draw(image)
+    
     lowborder = 10
     ypos = 230
 

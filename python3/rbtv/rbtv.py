@@ -44,7 +44,7 @@ class RBTV:
         #draw.text((2, 2), '    ', font = self.fontAwesome, fill = 0)
 
         #views
-        rbtv_printer.printViews((230, 95), draw, rest.getRBViews())
+        rbtv_printer.printViews((230, 95), img, rest.getRBViews())
 
 
         print(utils.parseTime(data['data'][0]['date']))
@@ -68,7 +68,7 @@ class RBTV:
 
             if timeStart < today and timeEnd > today and not hasCurrent:
                 print(shows[i]['title'], i)
-                rbtv_printer.printCurrent(img, draw, shows[i], timeStart, timeEnd, today, self.fontSmal)
+                rbtv_printer.printCurrent(img, shows[i], timeStart, timeEnd, today, self.fontSmal)
                 hasCurrent = True # sometimes shows overlap a few minutes
                 continue
 
