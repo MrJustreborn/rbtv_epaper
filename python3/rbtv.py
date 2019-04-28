@@ -16,8 +16,12 @@ class RBTV:
     def __init__(self):
         self.fontSmal = rbtv_config.fontSmal
         self.fontBig = rbtv_config.fontBig
+        self.fontAwesome = rbtv_config.fontAwesome
+        self.fontAwesomeBrands = rbtv_config.fontAwesomeBrands
+
         self.width = rbtv_config.screen_width
         self.height = rbtv_config.screen_height
+        
         self.live = rbtv_config.live
         self.neu = rbtv_config.neu
     
@@ -38,6 +42,14 @@ class RBTV:
         print(data['success'])
         return data
     
+    def getRBViews(self):
+        req = 'https://api.rocketbeans.tv/StreamCount'
+        print(req)
+        r = requests.get(req)
+        data = json.loads(r.text)
+        print(data['success'])
+        return data
+    
     def parseTime(self, date):
         return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
 
@@ -48,10 +60,18 @@ class RBTV:
         img = Image.new('1', (self.width, self.height), 255)
         
         draw = ImageDraw.Draw(img)
-        draw.text((40,30), rbtv_printer.getTime(today), font = self.fontBig, fill = 0)
-        #draw.text((10,100), str(today.day) +'. '+ str(today.month) +'. '+ str(today.year), font = font24, fill = 0)
-        #logo = Image.open('/home/mrjustreborn/Dev/PI/epaper/Cornerlogo_rbtv_151152.bmp')
-        #img.paste(logo,  (0,0))
+        draw.text((5, 1), rbtv_printer.getTime(today), font = self.fontBig, fill = 0)
+        #draw.text((0, 0), "   ", font = self.fontAwesome)
+        views = self.getRBViews()
+        width, height = draw.textsize("\n", font = self.fontAwesomeBrands)
+        h = 90
+        draw.multiline_text((5, h), "\n", font = self.fontAwesomeBrands, align = 'right')
+        draw.multiline_text((5, h + height + 2), "", font = self.fontAwesome, align = 'right')
+        draw.multiline_text((5 + width + 5, h), str(views['data']['twitch'])
+            +'\n'+str(views['data']['youtube'])
+            +'\n'+str(views['data']['total'])
+            , font = self.fontAwesome, align = 'left')
+
 
         print(self.parseTime(data['data'][0]['date']))
         #shows = data['data'][0]['elements']
