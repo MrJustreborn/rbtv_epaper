@@ -16,7 +16,7 @@ from io import BytesIO
 
 class RBTV:
     def __init__(self):
-        self.fontSmal = rbtv_config.fontSmal
+        self.fontSmall = rbtv_config.fontSmall
         self.fontBig = rbtv_config.fontBig
         self.fontAwesome = rbtv_config.fontAwesome
         self.fontAwesomeBrands = rbtv_config.fontAwesomeBrands
@@ -55,7 +55,7 @@ class RBTV:
 
     def get_screen(self) -> Image:
         today = datetime.today()
-        data = rest.getRBData(today)
+        data = rest.getSchedule(today)
 
         img = Image.new('1', (self.width, self.height), 255)
         draw = ImageDraw.Draw(img)
@@ -63,7 +63,7 @@ class RBTV:
         self._draw_header(img, today)
 
         #views
-        rbtv_printer.printViews((260, 95), img, rest.getRBViews())
+        rbtv_printer.printViews((260, 95), img, rest.getStreamCount())
 
 
         print(utils.parseTime(data['data'][0]['date']))
@@ -87,13 +87,13 @@ class RBTV:
 
             if timeStart < today and timeEnd > today and not hasCurrent:
                 print(shows[i]['title'], i)
-                rbtv_printer.printCurrent(img, shows[i], timeStart, timeEnd, today, self.fontSmal)
+                rbtv_printer.printCurrent(img, shows[i], timeStart, timeEnd, today, self.fontSmall)
                 hasCurrent = True # sometimes shows overlap a few minutes
                 continue
 
-            width, height = draw.textsize(utils.getTime(timeStart), font=self.fontSmal)
+            width, height = draw.textsize(utils.getTime(timeStart), font=self.fontSmall)
             title = utils.string_normalizer(str(shows[i]['title']))
-            draw.text((10 + 10 + width, 35 * pos + 230), utils.getTime(timeStart) +' '+ title, font = self.fontSmal, fill = 0)
+            draw.text((10 + 10 + width, 35 * pos + 230), utils.getTime(timeStart) +' '+ title, font = self.fontSmall, fill = 0)
 
             if shows[i]['type'] == 'premiere':
                 img.paste(self.neu, (10, 35 * pos + 230))

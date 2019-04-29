@@ -4,7 +4,7 @@ from datetime import datetime,timedelta
 import requests
 import json
 
-def getRBData(today: datetime):
+def getSchedule(today: datetime):
     print(today)
 
     yesterday = today + timedelta(days = -1)
@@ -24,7 +24,7 @@ def getRBData(today: datetime):
     print(data['success'])
     return data
 
-def getRBViews():
+def getStreamCount():
     req = 'https://api.rocketbeans.tv/StreamCount'
     print(req)
     r = requests.get(req)
