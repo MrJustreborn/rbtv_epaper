@@ -35,16 +35,18 @@ class RBTV:
         draw = ImageDraw.Draw(img)
 
         #clock
-        draw.rectangle((0, 25, 500, 87), fill=0)
-        draw.text((0, 12), utils.getTime(today), font = self.fontBig, fill = 255)
-        draw.text((190, 28), utils.getWeekday(today), font = self.fontSmal, fill = 255)
-        draw.text((190, 55), utils.getDate(today), font = self.fontSmal, fill = 255)
+        rbtv_printer.printClock(img, today)
 
         #notifications
         #draw.text((2, 2), '    ', font = self.fontAwesome, fill = 0)
 
+        #version
+        w, h = draw.textsize('v0.1.0', font = rbtv_config.fontTiny)
+        print(w, rbtv_config.screen_width - w)
+        draw.text((rbtv_config.screen_width - w - 4, 2), 'v0.1.0', font = rbtv_config.fontTiny, fill = 0)
+
         #views
-        rbtv_printer.printViews((230, 95), img, rest.getRBViews())
+        rbtv_printer.printViews((260, 95), img, rest.getRBViews())
 
 
         print(utils.parseTime(data['data'][0]['date']))

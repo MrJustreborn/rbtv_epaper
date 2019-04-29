@@ -11,6 +11,13 @@ from io import BytesIO
 import rbtv.rbtv_config as rbtv_config
 import utils
 
+def printClock(img: Image, today: datetime):
+    draw = ImageDraw.Draw(img)
+    draw.rectangle((0, 25, rbtv_config.screen_width, 87), fill=0)
+    draw.text((0, 12), utils.getTime(today), font = rbtv_config.fontBig, fill = 255)
+    draw.text((190, 28), utils.getWeekday(today), font = rbtv_config.fontSmal, fill = 255)
+    draw.text((190, 55), utils.getDate(today), font = rbtv_config.fontSmal, fill = 255)
+
 def printViews(xy, img: Image, views = {'data':{'total':0,'twitch':0,'youtube':0}}, alignment = "hdigit"):
     x = xy[0]
     y = xy[1]
@@ -27,7 +34,7 @@ def printViews(xy, img: Image, views = {'data':{'total':0,'twitch':0,'youtube':0
         draw.multiline_text((x + w + 20, y - 4), v, font = rbtv_config.fontSmal, align = "right", spacing = 0)
     elif alignment == "hdigit":
         v = str(views['data']['twitch'])+'\n'+str(views['data']['youtube'])+'\n'+str(views['data']['total'])
-        draw.multiline_text((x, y - 4), v, font = rbtv_config.fontSmal, align = "right", spacing = 0)
+        draw.multiline_text((x, y - 4), v, font = rbtv_config.fontSmal, align = "right", spacing = 0.5)
 
         w, h = draw.textsize("", font = rbtv_config.fontAwesomeBrands)
         w2, h2 = draw.textsize(v, font = rbtv_config.fontSmal)
@@ -89,15 +96,15 @@ def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, tod
     if wasModified:
         title = title + " ..."
 
-    draw.text((10 + 10 + width, ypos - lowborder - height - height - 5), title, font = font24, fill = 0)
+    draw.text((10 + 10 + width, ypos - lowborder - 53), title, font = font24, fill = 0)
 
     r = requests.get(show['episodeImage'])
     
     img = Image.open(BytesIO(r.content))
 
-    maxsize = (300, 150)
+    maxsize = (300, 140)
     tn_image = img.thumbnail(maxsize)
 
     print(img.size, img.size[0])
-    image.paste(img, (600-img.size[0] -10,10))
+    image.paste(img, (600-img.size[0], 25))
     pass
