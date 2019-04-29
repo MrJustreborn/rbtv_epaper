@@ -26,6 +26,32 @@ class RBTV:
         
         self.live = rbtv_config.live
         self.neu = rbtv_config.neu
+    
+    def _draw_header(self, img: Image, today: datetime):
+        draw = ImageDraw.Draw(img)
+        #clock
+        rbtv_printer.printClock(img, today)
+
+        #notifications
+        #draw.text((2, 2), '    ', font = rbtv_config.fontAwesomeSmall, fill = 0)
+        draw.text((2, 2), '', font = rbtv_config.fontAwesomeSmall, fill = 0)
+        draw.text((22, 2), '2', font = rbtv_config.fontTiny, fill = 0)
+
+        #version
+        w, h = draw.textsize('v0.1.0', font = rbtv_config.fontTiny)
+        draw.text((rbtv_config.screen_width - w - 4, 2), 'v0.1.0', font = rbtv_config.fontTiny, fill = 0)
+
+    def get_screen_blog(self) -> Image:
+        today = datetime.today()
+
+        img = Image.new('1', (self.width, self.height), 255)
+        draw = ImageDraw.Draw(img)
+
+        self._draw_header(img, today)
+
+        draw.text((375, 12), "Blog", font = rbtv_config.fontBig, fill = 255)
+
+        return img
 
     def get_screen(self) -> Image:
         today = datetime.today()
@@ -34,16 +60,7 @@ class RBTV:
         img = Image.new('1', (self.width, self.height), 255)
         draw = ImageDraw.Draw(img)
 
-        #clock
-        rbtv_printer.printClock(img, today)
-
-        #notifications
-        #draw.text((2, 2), '    ', font = self.fontAwesome, fill = 0)
-
-        #version
-        w, h = draw.textsize('v0.1.0', font = rbtv_config.fontTiny)
-        print(w, rbtv_config.screen_width - w)
-        draw.text((rbtv_config.screen_width - w - 4, 2), 'v0.1.0', font = rbtv_config.fontTiny, fill = 0)
+        self._draw_header(img, today)
 
         #views
         rbtv_printer.printViews((260, 95), img, rest.getRBViews())
