@@ -51,6 +51,22 @@ class RBTV:
 
         draw.text((375, 12), "Blog", font = rbtv_config.fontBig, fill = 255)
 
+        blog = rest.getBlogPromo()
+
+        for i in range(2):
+            date = utils.parseTime(blog['data'][i]['publishDate'])
+            print(date)
+            draw.text((5, 95 + 175 * i), str(utils.getTime(date)) +' - '+ str(utils.getDate(date)), font = rbtv_config.fontSmall, fill = 0)
+            draw.text((5 + 210, 95 + 175 * i + 30), str(blog['data'][i]['title']).replace(': ', ':\n'), font = rbtv_config.fontSmall, fill = 0)
+            
+            draw.text((5 + 210, 95 + 175 * i + (90 if i == 0 else 60)), str(blog['data'][i]['subtitle']).replace('. ', '.\n').replace(', ', ',\n'), font = rbtv_config.fontTiny, fill = 0)
+
+            r = requests.get('https:' + str(blog['data'][i]['thumbImage'][0]['url']))
+            preview = Image.open(BytesIO(r.content))
+            maxsize = (300, 140)
+            tn_image = preview.thumbnail(maxsize)
+            img.paste(preview, (5, 95 + 175 * i + 30))
+
         return img
 
     def get_screen(self) -> Image:

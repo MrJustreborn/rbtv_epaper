@@ -31,3 +31,11 @@ def getStreamCount():
     data = json.loads(r.text)
     print(data['success'])
     return data
+
+def getBlogPromo():
+    req = 'https://api.rocketbeans.tv/v1/blog/promo/all'
+    print(req)
+    r = requests.get(req)
+    data = json.loads(r.text)
+    print(data['success'])
+    return data
