@@ -8,7 +8,7 @@ def getSchedule(today: datetime):
     print(today)
 
     yesterday = today + timedelta(days = -1)
-    tomorrow = today + timedelta(days = 1)
+    tomorrow = today + timedelta(days = 2)
 
     withouttime = datetime(yesterday.year, yesterday.month, yesterday.day)
     timestamp = datetime.timestamp(withouttime)
