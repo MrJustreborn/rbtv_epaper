@@ -34,7 +34,7 @@ def printViews(xy, img: Image, views = {'data':{'total':0,'twitch':0,'youtube':0
         draw.multiline_text((x + w + 20, y - 4), v, font = rbtv_config.fontSmal, align = "right", spacing = 0)
     elif alignment == "hdigit":
         v = str(views['data']['twitch'])+'\n'+str(views['data']['youtube'])+'\n'+str(views['data']['total'])
-        draw.multiline_text((x, y - 4), v, font = rbtv_config.fontSmal, align = "right", spacing = 0.5)
+        draw.multiline_text((x, y - 4), v, font = rbtv_config.fontSmal, align = "right", spacing = 1.5)
 
         w, h = draw.textsize("", font = rbtv_config.fontAwesomeBrands)
         w2, h2 = draw.textsize(v, font = rbtv_config.fontSmal)
