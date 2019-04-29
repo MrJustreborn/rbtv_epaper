@@ -102,7 +102,7 @@ def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, tod
     
     img = Image.open(BytesIO(r.content))
 
-    maxsize = (300, 140)
+    maxsize = (250, 140)
     tn_image = img.thumbnail(maxsize)
 
     print(img.size, img.size[0])
