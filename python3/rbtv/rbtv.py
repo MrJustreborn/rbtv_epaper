@@ -38,8 +38,9 @@ class RBTV:
         draw.text((22, 2), '2', font = rbtv_config.fontTiny, fill = 0)
 
         #version
-        w, h = draw.textsize('v0.1.0', font = rbtv_config.fontTiny)
-        draw.text((rbtv_config.screen_width - w - 4, 2), 'v0.1.0', font = rbtv_config.fontTiny, fill = 0)
+        vString = "Beans on (e)Paper v0.1.0"
+        w, h = draw.textsize(vString, font = rbtv_config.fontTiny)
+        draw.text((rbtv_config.screen_width - w - 4, 2), vString, font = rbtv_config.fontTiny, fill = 0)
 
     def get_screen_blog(self) -> Image:
         today = datetime.today()
@@ -68,6 +69,23 @@ class RBTV:
             img.paste(preview, (5, 95 + 175 * i + 30))
 
         return img
+
+    def printBlog(self, img: Image):
+        draw = ImageDraw.Draw(img)
+        blog = rest.getBlogPromo()
+
+        date = utils.parseTime(blog['data'][0]['publishDate'])
+        print(date)
+        draw.text((5, 95 + 155), str(utils.getTime(date)) +' - '+ str(utils.getDate(date)), font = rbtv_config.fontSmall, fill = 0)
+        draw.text((5 + 210, 95 + 155 + 30), str(blog['data'][0]['title']).replace(': ', ':\n'), font = rbtv_config.fontSmall, fill = 0)
+        
+        draw.text((5 + 210, 95 + 175 + 65), str(blog['data'][0]['subtitle']).replace('. ', '.\n').replace(', ', ',\n'), font = rbtv_config.fontTiny, fill = 0)
+
+        r = requests.get('https:' + str(blog['data'][0]['thumbImage'][0]['url']))
+        preview = Image.open(BytesIO(r.content))
+        maxsize = (300, 140)
+        tn_image = preview.thumbnail(maxsize)
+        img.paste(preview, (5, 95 + 155 + 30))
 
     def get_screen(self) -> Image:
         today = datetime.today()
@@ -106,17 +124,21 @@ class RBTV:
                 rbtv_printer.printCurrent(img, shows[i], timeStart, timeEnd, today, self.fontSmall)
                 hasCurrent = True # sometimes shows overlap a few minutes
                 continue
+            
+            if today.minute % 2 == 0:
+                rbtv_printer.printUpcomming(img, shows[i], timeStart, pos)
+            # width, height = draw.textsize(utils.getTime(timeStart), font=self.fontSmall)
+            # title = utils.string_normalizer(str(shows[i]['title']))
+            # draw.text((10 + 10 + width, 35 * pos + 230), utils.getTime(timeStart) +' '+ title, font = self.fontSmall, fill = 0)
 
-            width, height = draw.textsize(utils.getTime(timeStart), font=self.fontSmall)
-            title = utils.string_normalizer(str(shows[i]['title']))
-            draw.text((10 + 10 + width, 35 * pos + 230), utils.getTime(timeStart) +' '+ title, font = self.fontSmall, fill = 0)
-
-            if shows[i]['type'] == 'premiere':
-                img.paste(self.neu, (10, 35 * pos + 230))
-            elif shows[i]['type'] == 'live':
-                img.paste(self.live, (10, 35 * pos + 230))
+            # if shows[i]['type'] == 'premiere':
+            #     img.paste(self.neu, (10, 35 * pos + 230))
+            # elif shows[i]['type'] == 'live':
+            #     img.paste(self.live, (10, 35 * pos + 230))
 
             pos += 1
             if pos > 5:
                 break
+        if today.minute % 2 == 1:
+            self.printBlog(img)
         return img

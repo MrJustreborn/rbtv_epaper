@@ -58,6 +58,19 @@ def printViews(xy, img: Image, views = {'data':{'total':0,'twitch':0,'youtube':0
         draw.text((x + tmpW, y - 2), "", font = rbtv_config.fontAwesome) #total
         draw.text((x + tmpW + w, y - 4), str(views['data']['total']), font = rbtv_config.fontSmall) #total
 
+def printUpcomming(img: Image, show, timeStart: datetime, pos):
+    draw = ImageDraw.Draw(img)
+
+    width, height = draw.textsize(utils.getTime(timeStart), font = rbtv_config.fontSmall)
+    title = utils.string_normalizer(str(show['title']))
+    draw.text((10 + 10 + width, 35 * pos + 230), utils.getTime(timeStart) +' '+ title, font = rbtv_config.fontSmall, fill = 0)
+
+    if show['type'] == 'premiere':
+        img.paste(rbtv_config.neu, (10, 35 * pos + 230))
+    elif show['type'] == 'live':
+        img.paste(rbtv_config.live, (10, 35 * pos + 230))
+
+
 def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, today: datetime, font24):
     draw = ImageDraw.Draw(image)
     
