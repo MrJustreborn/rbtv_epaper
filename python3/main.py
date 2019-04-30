@@ -4,6 +4,7 @@
 #import epd5in83
 import traceback
 import rbtv.rbtv as rbtv
+import time
 
 def main():
     try:
@@ -11,7 +12,7 @@ def main():
         #epd.init()
 
         rbtv_api = rbtv.RBTV()
-        img = rbtv_api.get_layout()
+        img = rbtv_api.get_layout("upcoming-detail")
 
         img.show()
 
@@ -25,6 +26,30 @@ def main():
         print('traceback.format_exc():\n%s',traceback.format_exc())
         exit()
 
+def cycle():
+    try:
+        #epd = epd5in83.EPD()
+        #epd.init()
+
+        rbtv_api = rbtv.RBTV()
+
+        img = rbtv_api.get_layout("boot")
+        time.sleep(30)
+        for c in range(3):
+            img = rbtv_api.get_layout("upcoming")
+            time.sleep(30)
+
+            img = rbtv_api.get_layout("upcoming-detail")
+            time.sleep(30)
+
+        #img = ImageOps.flip(ImageOps.mirror(img))
+        #epd.display(epd.getbuffer(img))
+            
+        #epd.sleep()
+    
+    except:
+        print('traceback.format_exc():\n%s',traceback.format_exc())
+        exit()
 
 if __name__ == "__main__":
     main()

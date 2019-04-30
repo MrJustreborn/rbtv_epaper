@@ -15,7 +15,7 @@ class API:
     def __init__(self):
         self.headers = {'Authorization': 'Bearer ' + token}
         self.notifications = []
-        self.reloadNotifications()
+        self.ws = None
 
     def _handleMessage(self, ws, msg):
         prefix = '42'
@@ -27,6 +27,8 @@ class API:
         
         elif msg[0] == 'AC_AUTHENTICATION_RESULT':
             print("Auth: ", msg[1])
+            if msg[1]['result'] == False:
+                ws.close()
         
         elif msg[0] == 'AC_PING':
             resp = prefix + str(['CA_PONG', msg[1]]).replace("'",'"').replace(' ','')
@@ -38,6 +40,9 @@ class API:
         
     def reloadNotifications(self):
         self.notifications = []
+
+        if self.ws:
+            self.ws.close()
 
         def on_message(ws, message):
             if message.startswith('42'):
@@ -54,13 +59,13 @@ class API:
             print("### opend ###")
 
         #websocket.enableTrace(True)
-        ws = websocket.WebSocketApp("wss://api.rocketbeans.tv/socket.io/?EIO=3&transport=websocket",
+        self.ws = websocket.WebSocketApp("wss://api.rocketbeans.tv/socket.io/?EIO=3&transport=websocket",
                                 on_message = on_message,
                                 on_error = on_error,
                                 on_close = on_close)
-        ws.on_open = on_open
+        self.ws.on_open = on_open
         def run(*args):
-            ws.run_forever()
+            self.ws.run_forever()
 
         thread.start_new_thread(run, ())
     
