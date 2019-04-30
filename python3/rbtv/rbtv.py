@@ -29,11 +29,15 @@ class RBTV:
     
     def _draw_header(self, img: Image, today: datetime):
         draw = ImageDraw.Draw(img)
-        
+
         #clock
         rbtv_printer.printClock((0,0), img, today)
+
         #views
         rbtv_printer.printViews((345, 70), img, rest.getStreamCount())
+
+        #views
+        rbtv_printer.printSelf((5, 70), img)
 
         #placeholder for preview image
         img.paste(rbtv_config.preview_placeholder, (600-250, 0))
