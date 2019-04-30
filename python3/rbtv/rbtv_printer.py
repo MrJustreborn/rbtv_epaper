@@ -107,16 +107,21 @@ def printUpcomming(img: Image, show, timeStart: datetime, pos):
     draw = ImageDraw.Draw(img)
 
     width, height = draw.textsize(utils.getTime(timeStart), font = rbtv_config.fontSmall)
-    title = utils.string_normalizer(str(show['title']))
-    draw.text((10 + 10 + width, 35 * pos + 230), utils.getTime(timeStart) +' '+ title, font = rbtv_config.fontSmall, fill = 0)
+    title = str(show['title'])
+    title = title +' - '+ (show['topic'] if show['topic'] else show['game'])
+    title = utils.string_normalizer(title)
+    title = truncateString(draw, title)
+
+    height = 210
+    draw.text((10 + 10 + width, 33 * pos + height), utils.getTime(timeStart) +' '+ title, font = rbtv_config.fontSmall, fill = 0)
 
     if show['type'] == 'premiere':
-        img.paste(rbtv_config.neu, (10, 35 * pos + 230))
+        img.paste(rbtv_config.neu, (10, 33 * pos + height))
     elif show['type'] == 'live':
-        img.paste(rbtv_config.live, (10, 35 * pos + 230))
+        img.paste(rbtv_config.live, (10, 33 * pos + height))
 
 
-def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, today: datetime, font24):
+def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, today: datetime, font = rbtv_config.fontSmall):
     draw = ImageDraw.Draw(image)
     
     lowborder = 10
@@ -124,11 +129,11 @@ def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, tod
 
     draw.rectangle((0, ypos - 70, 600, ypos - 70))
 
-    width, height = draw.textsize(utils.getTime(timeStart), font=font24)
-    draw.text((10, ypos - lowborder - height), utils.getTime(timeStart), font = font24, fill = 0)
+    width, height = draw.textsize(utils.getTime(timeStart), font = font)
+    draw.text((10, ypos - lowborder - height), utils.getTime(timeStart), font = font, fill = 0)
 
-    width, height = draw.textsize(utils.getTime(timeEnd), font=font24)
-    draw.text((600 - 10 - width, ypos - lowborder - height), utils.getTime(timeEnd), font = font24, fill = 0)
+    width, height = draw.textsize(utils.getTime(timeEnd), font = font)
+    draw.text((600 - 10 - width, ypos - lowborder - height), utils.getTime(timeEnd), font = font, fill = 0)
 
 
     draw.rectangle((10 + 10 + width, ypos - lowborder - height + 2, 600 - 10 - width - 10, ypos - lowborder + 2))
@@ -143,20 +148,17 @@ def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, tod
     draw.rectangle((10 + 10 + width + 2, ypos - lowborder - height + 4, 10 + 10 + width + 2 + width2, ypos - lowborder - 0), 0)
 
 
-    title = utils.string_normalizer(str(show['title']))
+    title = str(show['title'])
     title = title +' - '+ (show['topic'] if show['topic'] else show['game'])
-    width2, height = draw.textsize(title, font=font24)
+    title = utils.string_normalizer(title)
+    title = truncateString(draw, title, 500)
 
-    wasModified = False
-    while width2 > 420:
-        title = title[:-1]
-        width2, height = draw.textsize(title, font=font24)
-        wasModified = True
-    
-    if wasModified:
-        title = title + " ..."
+    draw.text((10 + 10 + width, ypos - lowborder - 53), title, font = font, fill = 0)
 
-    draw.text((10 + 10 + width, ypos - lowborder - 53), title, font = font24, fill = 0)
+    if show['type'] == 'premiere':
+        image.paste(rbtv_config.neu, (10, ypos - lowborder - 53))
+    elif show['type'] == 'live':
+        image.paste(rbtv_config.live, (10, ypos - lowborder - 53))
 
     #r = requests.get(show['episodeImage'])
     
@@ -168,3 +170,17 @@ def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, tod
     #print(img.size, img.size[0])
     #image.paste(img, (600-img.size[0], 25))
     pass
+
+def truncateString(draw: ImageDraw, text: str, maxWidth = 420, font = rbtv_config.fontSmall):
+    w, h = draw.textsize(text, font = font)
+
+    wasModified = False
+    while w > maxWidth:
+        text = text[:-1]
+        w, h = draw.textsize(text, font = font)
+        wasModified = True
+    
+    if wasModified:
+        text = text + " ..."
+    
+    return text
