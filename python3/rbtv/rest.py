@@ -112,7 +112,7 @@ class API:
         return data
 
     def getBlogPromo(self):
-        req = 'https://api.rocketbeans.tv/v1/blog/promo/all'
+        req = 'https://api.rocketbeans.tv/v1/blog/promo/all?offset=0&limit=2'
         print(req)
         r = requests.get(req, headers = self.headers)
         data = json.loads(r.text)

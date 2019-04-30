@@ -19,13 +19,18 @@ class RBTV:
         self.api = rest.API()
     
     def get_layout(self, which = "upcoming"):
+        img = Image.new('1', (rbtv_config.screen_width, rbtv_config.screen_height), 255)
+        
         if which == "boot":
-            return self.get_boot_screen()
+            return self.get_boot_screen(img)
         elif which == "upcoming":
-            return self.get_upcoming()
+            return self.get_current_screen(img, True)
         elif which == "upcoming-detail":
-            return self.get_upcoming(True)
-        return self.get_upcoming()
+            return self.get_current_screen(img, True, True)
+        elif which == "blog":
+            return self.get_blog_screen(img)
+        
+        return self.get_current_screen(img)
     
     def _draw_header(self, img: Image, today: datetime):
         draw = ImageDraw.Draw(img)
@@ -39,39 +44,23 @@ class RBTV:
         img.paste(rbtv_config.preview_placeholder, (600-250, 0))
         return img
 
-    def get_boot_screen(self):
+    def get_boot_screen(self, img: Image):
         self.api.reloadNotifications()
-        img = Image.new('1', (rbtv_config.screen_width, rbtv_config.screen_height), 255)
         draw = ImageDraw.Draw(img)
         draw.text((15, 50), "TODO:\n\nADD START\nSCREEN", font = rbtv_config.fontBig) #twitch
         return img
 
-    # def printBlog(self, img: Image):
-    #     draw = ImageDraw.Draw(img)
-    #     blog = self.api.getBlogPromo()
+    def get_blog_screen(self, img: Image):
+        rbtv_printer.printBlog((5, 250), img, datetime.today(), self.api.getBlogPromo())
+        return self.get_current_screen(img)
 
-    #     date = utils.parseTime(blog['data'][0]['publishDate'])
-    #     print(date)
-    #     draw.text((5, 95 + 155), str(utils.getTime(date)) +' - '+ str(utils.getDate(date)), font = rbtv_config.fontSmall, fill = 0)
-    #     draw.text((5 + 210, 95 + 155 + 30), str(blog['data'][0]['title']).replace(': ', ':\n'), font = rbtv_config.fontSmall, fill = 0)
-        
-    #     draw.text((5 + 210, 95 + 175 + 65), str(blog['data'][0]['subtitle']).replace('. ', '.\n').replace(', ', ',\n'), font = rbtv_config.fontTiny, fill = 0)
-
-    #     r = requests.get('https:' + str(blog['data'][0]['thumbImage'][0]['url']))
-    #     preview = Image.open(BytesIO(r.content))
-    #     maxsize = (300, 140)
-    #     tn_image = preview.thumbnail(maxsize)
-    #     img.paste(preview, (5, 95 + 155 + 30))
-
-    def get_upcoming(self, detail = False) -> Image:
+    def get_current_screen(self, img: Image, upcoming = False, detail = False) -> Image:
         today = datetime.today()
         data = self.api.getSchedule(today)
 
-        img = Image.new('1', (rbtv_config.screen_width, rbtv_config.screen_height), 255)
         draw = ImageDraw.Draw(img)
 
         self._draw_header(img, today)
-
 
         print(utils.parseTime(data['data'][0]['date']))
 
@@ -99,11 +88,11 @@ class RBTV:
                 hasCurrent = True # sometimes shows overlap a few minutes
                 continue
             
+            if not upcoming:
+                break
             rbtv_printer.printUpcomming(img, shows[i], timeStart, pos, detail)
 
             pos += 1
             if pos > cnt:
                 break
-        # if today.minute % 2 == 1:
-        #     self.printBlog(img)
         return img

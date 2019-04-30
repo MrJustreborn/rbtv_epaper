@@ -12,7 +12,7 @@ def main():
         #epd.init()
 
         rbtv_api = rbtv.RBTV()
-        img = rbtv_api.get_layout("upcoming-detail")
+        img = rbtv_api.get_layout("blog")
 
         img.show()
 
@@ -34,13 +34,16 @@ def cycle():
         rbtv_api = rbtv.RBTV()
 
         img = rbtv_api.get_layout("boot")
-        time.sleep(30)
+        time.sleep(20)
         for c in range(3):
             img = rbtv_api.get_layout("upcoming")
-            time.sleep(30)
+            time.sleep(20)
 
             img = rbtv_api.get_layout("upcoming-detail")
-            time.sleep(30)
+            time.sleep(20)
+
+            img = rbtv_api.get_layout("blog")
+            time.sleep(20)
 
         #img = ImageOps.flip(ImageOps.mirror(img))
         #epd.display(epd.getbuffer(img))
