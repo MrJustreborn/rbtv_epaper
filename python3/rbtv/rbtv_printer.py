@@ -80,7 +80,7 @@ def printSelf(xy, img: Image, self = {"success":True,"data":{"displayName":"MrJu
     
     draw = ImageDraw.Draw(img)
     draw.text((x, y), "", font = rbtv_config.fontAwesome)
-    draw.text((x + 30, y - 4), str(self['data']['displayName']), font = rbtv_config.fontSmall)
+    draw.text((x + 30, y), str(self['data']['displayName']), font = rbtv_config.fontSmall)
 
     unread = 0
     for n in notifications:
@@ -89,7 +89,7 @@ def printSelf(xy, img: Image, self = {"success":True,"data":{"displayName":"MrJu
 
     y += 30
     draw.text((x, y), "", font = rbtv_config.fontAwesome)
-    draw.text((x + 30, y - 4), str(len(notifications)) + (' (' + str(unread) + ')' if unread > 0 else ''), font = rbtv_config.fontSmall)
+    draw.text((x + 30, y - 2), str(len(notifications)) + (' (' + str(unread) + ')' if unread > 0 else ''), font = rbtv_config.fontSmall)
 
     # y += 27
     # draw.text((x, y), "", font = rbtv_config.fontAwesome)
