@@ -15,6 +15,29 @@ class API:
     def __init__(self):
         self.headers = {'Authorization': 'Bearer ' + token}
         self.notifications = []
+        self.reloadNotifications()
+
+    def _handleMessage(self, ws, msg):
+        prefix = '42'
+        print("WS: ", msg[0])
+        if msg[0] == 'AC_AUTHENTICATION_REQ':
+            resp = prefix + str(['CA_AUTHENTICATION', {'appName':'rbtv-page', 'token':token}]).replace("'",'"').replace(' ','')
+            print("WS-SEND: ", resp)
+            ws.send(resp)
+        
+        elif msg[0] == 'AC_AUTHENTICATION_RESULT':
+            print("Auth: ", msg[1])
+        
+        elif msg[0] == 'AC_PING':
+            resp = prefix + str(['CA_PONG', msg[1]]).replace("'",'"').replace(' ','')
+            print("WS-SEND: ", resp)
+            ws.send(resp)
+        
+        elif msg[0] == 'AC_NOTIFICATION':
+            self.notifications.append(msg[1])
+        
+    def reloadNotifications(self):
+        self.notifications = []
 
         def on_message(ws, message):
             if message.startswith('42'):
@@ -40,31 +63,20 @@ class API:
             ws.run_forever()
 
         thread.start_new_thread(run, ())
-        pass #setup websoket
-
-    def _handleMessage(self, ws, msg):
-        prefix = '42'
-        print("WS: ", msg[0])
-        if msg[0] == 'AC_AUTHENTICATION_REQ':
-            resp = prefix + str(['CA_AUTHENTICATION', {'appName':'rbtv-page', 'token':token}]).replace("'",'"').replace(' ','')
-            print("WS-SEND: ", resp)
-            ws.send(resp)
-        
-        elif msg[0] == 'AC_AUTHENTICATION_RESULT':
-            print("Auth: ", msg[1])
-        
-        elif msg[0] == 'AC_PING':
-            resp = prefix + str(['CA_PONG', msg[1]]).replace("'",'"').replace(' ','')
-            print("WS-SEND: ", resp)
-            ws.send(resp)
-        
-        elif msg[0] == 'AC_NOTIFICATION':
-            self.notifications.append(msg[1])
-        
-        pass
     
     def getNotifications(self):
         return self.notifications
+
+    def getSelf(self):
+        req = 'https://api.rocketbeans.tv/v1/user/self'
+        print(req)
+        r = requests.get(req, headers = self.headers)
+        data = json.loads(r.text)
+        print(data['success'])
+        if data['success']:
+            return data
+        else:
+            return None
 
     def getSchedule(self, today: datetime):
         print(today)

@@ -31,7 +31,7 @@ class RBTV:
         rbtv_printer.printViews((345, 70), img, self.api.getStreamCount())
 
         #views
-        rbtv_printer.printSelf((5, 75), img)
+        rbtv_printer.printSelf((5, 75), img, self.api.getSelf(), self.api.getNotifications())
 
         #placeholder for preview image
         img.paste(rbtv_config.preview_placeholder, (600-250, 0))
