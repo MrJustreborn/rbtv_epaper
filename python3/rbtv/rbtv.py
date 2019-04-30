@@ -18,7 +18,7 @@ class RBTV:
     def __init__(self):
         self.api = rest.API()
     
-    def get_layout(self, which = "upcoming"):
+    def get_layout(self, which = "upcoming", data = None):
         img = Image.new('1', (rbtv_config.screen_width, rbtv_config.screen_height), 255)
         
         if which == "boot":
@@ -29,6 +29,8 @@ class RBTV:
             return self.get_current_screen(img, True, True)
         elif which == "blog":
             return self.get_blog_screen(img)
+        elif which == "notification":
+            return self.get_notification_screen(img, data)
         
         return self.get_current_screen(img)
     
@@ -49,6 +51,13 @@ class RBTV:
         draw = ImageDraw.Draw(img)
         draw.text((15, 50), "TODO:\n\nADD START\nSCREEN", font = rbtv_config.fontBig) #twitch
         return img
+
+    def get_notifications(self):
+        return self.api.getNotifications()
+
+    def get_notification_screen(self, img: Image, data):
+        rbtv_printer.printNotification((5, 250), img, datetime.today(), data)
+        return self.get_current_screen(img)
 
     def get_blog_screen(self, img: Image):
         rbtv_printer.printBlog((5, 250), img, datetime.today(), self.api.getBlogPromo())

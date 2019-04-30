@@ -135,6 +135,17 @@ def getTimeDelta(time: int):
     return 'vor ' + str(time) + ' ' + unit
 
 
+def printNotification(xy, img: Image, today: datetime, data):
+    if not data.get('data'):
+        return
+    
+    x = xy[0]
+    y = xy[1]
+
+    draw = ImageDraw.Draw(img)
+
+    title = str(data['data']['show'])
+    draw.text((x, y), title, font = rbtv_config.fontSmall, fill = 0)
 
 
 

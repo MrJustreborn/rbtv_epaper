@@ -12,7 +12,12 @@ def main():
         #epd.init()
 
         rbtv_api = rbtv.RBTV()
-        img = rbtv_api.get_layout("blog")
+        img = rbtv_api.get_layout("boot")
+        time.sleep(1)
+        notifications = rbtv_api.get_notifications()
+        for n in notifications:
+            img = rbtv_api.get_layout("notification", n)
+            break
 
         img.show()
 
@@ -44,6 +49,11 @@ def cycle():
 
             img = rbtv_api.get_layout("blog")
             time.sleep(20)
+
+            notifications = rbtv_api.get_notifications()
+            for n in notifications:
+                img = rbtv_api.get_layout("notification", n)
+                time.sleep(20)
 
         #img = ImageOps.flip(ImageOps.mirror(img))
         #epd.display(epd.getbuffer(img))
