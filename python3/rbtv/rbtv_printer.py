@@ -11,18 +11,26 @@ from io import BytesIO
 import rbtv.rbtv_config as rbtv_config
 import utils
 
-def printClock(img: Image, today: datetime):
-    draw = ImageDraw.Draw(img)
-    draw.rectangle((0, 25, rbtv_config.screen_width, 87), fill=0)
-    draw.text((0, 12), utils.getTime(today), font = rbtv_config.fontBig, fill = 255)
-    draw.text((190, 28), utils.getWeekday(today), font = rbtv_config.fontSmall, fill = 255)
-    draw.text((190, 55), utils.getDate(today), font = rbtv_config.fontSmall, fill = 255)
+def printClock(xy, img: Image, today: datetime):
+    x = xy[0]
+    y = xy[1]
 
-def printViews(xy, img: Image, views = {'data':{'total':0,'twitch':0,'youtube':0}}, alignment = "hdigit"):
+
+    draw = ImageDraw.Draw(img)
+    draw.rectangle((x, y, rbtv_config.screen_width, 65), fill=0)
+    draw.text((x, y - 12), utils.getTime(today), font = rbtv_config.fontBig, fill = 255)
+    draw.text((x + 200, y + 3), utils.getWeekday(today), font = rbtv_config.fontSmall, fill = 255)
+    draw.text((x + 200, y + 32), utils.getDate(today), font = rbtv_config.fontSmall, fill = 255)
+
+def printViews(xy, img: Image, views = {'data':{'total':0,'twitch':0,'youtube':0}}, alignment = "hdigit", anchor = "right"):
     x = xy[0]
     y = xy[1]
 
     draw = ImageDraw.Draw(img)
+    if anchor == "right":
+        w, h = draw.textsize(str(views['data']['total']), font = rbtv_config.fontSmall)
+        print("width ", w)
+        x = x - (w + 30) # ~ size of icon
     if alignment == "hicons":
         w, h = draw.textsize("", font = rbtv_config.fontAwesomeBrands)
 
@@ -111,13 +119,13 @@ def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, tod
 
     draw.text((10 + 10 + width, ypos - lowborder - 53), title, font = font24, fill = 0)
 
-    r = requests.get(show['episodeImage'])
+    #r = requests.get(show['episodeImage'])
     
-    img = Image.open(BytesIO(r.content))
+    #img = Image.open(BytesIO(r.content))
 
-    maxsize = (250, 140)
-    tn_image = img.thumbnail(maxsize)
+    #maxsize = (250, 140)
+    #tn_image = img.thumbnail(maxsize)
 
-    print(img.size, img.size[0])
-    image.paste(img, (600-img.size[0], 25))
+    #print(img.size, img.size[0])
+    #image.paste(img, (600-img.size[0], 25))
     pass

@@ -29,18 +29,24 @@ class RBTV:
     
     def _draw_header(self, img: Image, today: datetime):
         draw = ImageDraw.Draw(img)
+        
         #clock
-        rbtv_printer.printClock(img, today)
+        rbtv_printer.printClock((0,0), img, today)
+        #views
+        rbtv_printer.printViews((345, 70), img, rest.getStreamCount())
+
+        #placeholder for preview image
+        img.paste(rbtv_config.preview_placeholder, (600-250, 0))
 
         #notifications
         #draw.text((2, 2), '    ', font = rbtv_config.fontAwesomeSmall, fill = 0)
-        draw.text((2, 2), '', font = rbtv_config.fontAwesomeSmall, fill = 0)
-        draw.text((22, 2), '2', font = rbtv_config.fontTiny, fill = 0)
+        #draw.text((2, 2), '', font = rbtv_config.fontAwesomeSmall, fill = 0)
+        #draw.text((22, 2), '2', font = rbtv_config.fontTiny, fill = 0)
 
         #version
-        vString = "Beans on (e)Paper v0.1.0"
-        w, h = draw.textsize(vString, font = rbtv_config.fontTiny)
-        draw.text((rbtv_config.screen_width - w - 4, 2), vString, font = rbtv_config.fontTiny, fill = 0)
+        #vString = "Beans on (e)Paper v0.1.0"
+        #w, h = draw.textsize(vString, font = rbtv_config.fontTiny)
+        #draw.text((rbtv_config.screen_width - w - 4, 2), vString, font = rbtv_config.fontTiny, fill = 0)
 
     def get_screen_blog(self) -> Image:
         today = datetime.today()
@@ -96,9 +102,6 @@ class RBTV:
 
         self._draw_header(img, today)
 
-        #views
-        rbtv_printer.printViews((260, 95), img, rest.getStreamCount())
-
 
         print(utils.parseTime(data['data'][0]['date']))
 
@@ -127,14 +130,6 @@ class RBTV:
             
             if today.minute % 2 == 0:
                 rbtv_printer.printUpcomming(img, shows[i], timeStart, pos)
-            # width, height = draw.textsize(utils.getTime(timeStart), font=self.fontSmall)
-            # title = utils.string_normalizer(str(shows[i]['title']))
-            # draw.text((10 + 10 + width, 35 * pos + 230), utils.getTime(timeStart) +' '+ title, font = self.fontSmall, fill = 0)
-
-            # if shows[i]['type'] == 'premiere':
-            #     img.paste(self.neu, (10, 35 * pos + 230))
-            # elif shows[i]['type'] == 'live':
-            #     img.paste(self.live, (10, 35 * pos + 230))
 
             pos += 1
             if pos > 5:
