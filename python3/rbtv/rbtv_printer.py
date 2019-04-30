@@ -103,22 +103,39 @@ def printSelf(xy, img: Image, self = {"success":True,"data":{"displayName":"MrJu
 
 
 
-def printUpcomming(img: Image, show, timeStart: datetime, pos):
+def printUpcomming(img: Image, show, timeStart: datetime, pos, detail = False):
     draw = ImageDraw.Draw(img)
 
+    if detail:
+        pos *= 2
+
     width, height = draw.textsize(utils.getTime(timeStart), font = rbtv_config.fontSmall)
+    
     title = str(show['title'])
-    title = title +' - '+ (show['topic'] if show['topic'] else show['game'])
+    if not detail:
+        title = title +' - '+ (show['topic'] if show['topic'] else show['game'])
     title = utils.string_normalizer(title)
     title = truncateString(draw, title)
 
-    height = 210
-    draw.text((10 + 10 + width, 33 * pos + height), utils.getTime(timeStart) +' '+ title, font = rbtv_config.fontSmall, fill = 0)
+    height = 220 if detail else 210
+    if detail:
+        height += pos * 5
+    paddingLeft = 70
+    draw.text((10 + paddingLeft, 33 * pos + height), utils.getTime(timeStart) +' '+ title, font = rbtv_config.fontSmall, fill = 0)
+    
+    if detail:
+        detailStr = str((show['topic'] if show['topic'] else show['game']))
+        detailStr = utils.string_normalizer(detailStr)
+        detailStr = truncateString(draw, detailStr)
+        draw.text((10 + paddingLeft + width, 33 * pos + height + 32), ' ' +detailStr, font = rbtv_config.fontSmall, fill = 0)
 
     if show['type'] == 'premiere':
         img.paste(rbtv_config.neu, (10, 33 * pos + height))
     elif show['type'] == 'live':
         img.paste(rbtv_config.live, (10, 33 * pos + height))
+    
+    if detail and show.get('isSubscribed', False):
+        img.paste(rbtv_config.abonniert, (10, 33 * pos + height + 32))
 
 
 def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, today: datetime, font = rbtv_config.fontSmall):

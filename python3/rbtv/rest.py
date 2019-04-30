@@ -5,6 +5,7 @@ import requests
 import json
 class API:
     def __init__(self):
+        self.headers = {'Authorization': 'Bearer ***REMOVED***'}
         pass #setup websoket
 
     def getSchedule(self, today: datetime):
@@ -22,7 +23,7 @@ class API:
 
         req = 'https://api.rocketbeans.tv/v1/schedule/normalized?startDay=' +str(int(timestamp))+ '&endDay=' +str(int(timestamp2))
         print(req)
-        r = requests.get(req)
+        r = requests.get(req, headers = self.headers)
         data = json.loads(r.text)
         print(data['success'])
         return data
@@ -30,7 +31,7 @@ class API:
     def getStreamCount(self):
         req = 'https://api.rocketbeans.tv/StreamCount'
         print(req)
-        r = requests.get(req)
+        r = requests.get(req, headers = self.headers)
         data = json.loads(r.text)
         print(data['success'])
         return data
@@ -38,7 +39,7 @@ class API:
     def getBlogPromo(self):
         req = 'https://api.rocketbeans.tv/v1/blog/promo/all'
         print(req)
-        r = requests.get(req)
+        r = requests.get(req, headers = self.headers)
         data = json.loads(r.text)
         print(data['success'])
         return data

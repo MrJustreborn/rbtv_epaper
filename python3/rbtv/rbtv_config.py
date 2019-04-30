@@ -15,6 +15,8 @@ fontAwesomeBrands = ImageFont.truetype(font + '/Font Awesome 5 Brands-Regular-40
 
 live = Image.open(img + '/live.bmp')
 neu = Image.open(img + '/neu.bmp')
+abonniert = Image.open(img + '/abonniert.bmp')
+
 preview_placeholder = Image.open(img + '/placeholder.bmp')
 
 screen_width = 600
