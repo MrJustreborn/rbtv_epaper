@@ -11,7 +11,7 @@ def main():
         #epd.init()
 
         rbtv_api = rbtv.RBTV()
-        img = rbtv_api.get_screen()
+        img = rbtv_api.get_layout()
 
         img.show()
 

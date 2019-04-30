@@ -177,15 +177,18 @@ def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, tod
     elif show['type'] == 'live':
         image.paste(rbtv_config.live, (10, ypos - lowborder - 53))
 
-    #r = requests.get(show['episodeImage'])
-    
-    #img = Image.open(BytesIO(r.content))
+    r = requests.get(show['episodeImage'])
+    try:
+        img = Image.open(BytesIO(r.content))
 
-    #maxsize = (250, 140)
-    #tn_image = img.thumbnail(maxsize)
+        maxsize = (250, 140)
+        tn_image = img.thumbnail(maxsize)
 
     #print(img.size, img.size[0])
-    #image.paste(img, (600-img.size[0], 25))
+        image.paste(img, (350, 0))
+    except:
+        print('could not load episodeImage')
+        pass
     pass
 
 def truncateString(draw: ImageDraw, text: str, maxWidth = 420, font = rbtv_config.fontSmall):

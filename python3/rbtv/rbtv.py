@@ -18,6 +18,9 @@ class RBTV:
     def __init__(self):
         self.api = rest.API()
     
+    def get_layout(self, which = "upcomming"):
+        return self.get_screen()
+    
     def _draw_header(self, img: Image, today: datetime):
         draw = ImageDraw.Draw(img)
 
@@ -32,42 +35,6 @@ class RBTV:
 
         #placeholder for preview image
         img.paste(rbtv_config.preview_placeholder, (600-250, 0))
-
-        #notifications
-        #draw.text((2, 2), '    ', font = rbtv_config.fontAwesomeSmall, fill = 0)
-        #draw.text((2, 2), '', font = rbtv_config.fontAwesomeSmall, fill = 0)
-        #draw.text((22, 2), '2', font = rbtv_config.fontTiny, fill = 0)
-
-        #version
-        #vString = "Beans on (e)Paper v0.1.0"
-        #w, h = draw.textsize(vString, font = rbtv_config.fontTiny)
-        #draw.text((rbtv_config.screen_width - w - 4, 2), vString, font = rbtv_config.fontTiny, fill = 0)
-
-    # def get_screen_blog(self) -> Image:
-    #     today = datetime.today()
-
-    #     img = Image.new('1', (rbtv_config.screen_width, rbtv_config.screen_height), 255)
-    #     draw = ImageDraw.Draw(img)
-
-    #     self._draw_header(img, today)
-
-    #     draw.text((375, 12), "Blog", font = rbtv_config.fontBig, fill = 255)
-
-    #     blog = self.api.getBlogPromo()
-
-    #     for i in range(2):
-    #         date = utils.parseTime(blog['data'][i]['publishDate'])
-    #         print(date)
-    #         draw.text((5, 95 + 175 * i), str(utils.getTime(date)) +' - '+ str(utils.getDate(date)), font = rbtv_config.fontSmall, fill = 0)
-    #         draw.text((5 + 210, 95 + 175 * i + 30), str(blog['data'][i]['title']).replace(': ', ':\n'), font = rbtv_config.fontSmall, fill = 0)
-            
-    #         draw.text((5 + 210, 95 + 175 * i + (90 if i == 0 else 60)), str(blog['data'][i]['subtitle']).replace('. ', '.\n').replace(', ', ',\n'), font = rbtv_config.fontTiny, fill = 0)
-
-    #         r = requests.get('https:' + str(blog['data'][i]['thumbImage'][0]['url']))
-    #         preview = Image.open(BytesIO(r.content))
-    #         maxsize = (300, 140)
-    #         tn_image = preview.thumbnail(maxsize)
-    #         img.paste(preview, (5, 95 + 175 * i + 30))
 
         return img
 
