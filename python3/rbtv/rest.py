@@ -1,12 +1,70 @@
 
 from datetime import datetime,timedelta
 
+import websocket
+try:
+    import thread
+except ImportError:
+    import _thread as thread
 import requests
 import json
+
+
+token = '*** REMOVED ***'
 class API:
     def __init__(self):
-        self.headers = {'Authorization': 'Bearer ***REMOVED***'}
+        self.headers = {'Authorization': 'Bearer ' + token}
+        self.notifications = []
+
+        def on_message(ws, message):
+            if message.startswith('42'):
+                msg = json.loads(message[2:])
+                self._handleMessage(ws, msg)
+
+        def on_error(ws, error):
+            print("WS_ERR: ", error)
+
+        def on_close(ws):
+            print("### closed ###")
+
+        def on_open(ws):
+            print("### opend ###")
+
+        #websocket.enableTrace(True)
+        ws = websocket.WebSocketApp("wss://api.rocketbeans.tv/socket.io/?EIO=3&transport=websocket",
+                                on_message = on_message,
+                                on_error = on_error,
+                                on_close = on_close)
+        ws.on_open = on_open
+        def run(*args):
+            ws.run_forever()
+
+        thread.start_new_thread(run, ())
         pass #setup websoket
+
+    def _handleMessage(self, ws, msg):
+        prefix = '42'
+        print("WS: ", msg[0])
+        if msg[0] == 'AC_AUTHENTICATION_REQ':
+            resp = prefix + str(['CA_AUTHENTICATION', {'appName':'rbtv-page', 'token':token}]).replace("'",'"').replace(' ','')
+            print("WS-SEND: ", resp)
+            ws.send(resp)
+        
+        elif msg[0] == 'AC_AUTHENTICATION_RESULT':
+            print("Auth: ", msg[1])
+        
+        elif msg[0] == 'AC_PING':
+            resp = prefix + str(['CA_PONG', msg[1]]).replace("'",'"').replace(' ','')
+            print("WS-SEND: ", resp)
+            ws.send(resp)
+        
+        elif msg[0] == 'AC_NOTIFICATION':
+            self.notifications.append(msg[1])
+        
+        pass
+    
+    def getNotifications(self):
+        return self.notifications
 
     def getSchedule(self, today: datetime):
         print(today)
