@@ -125,13 +125,13 @@ def getTimeDelta(time: int):
     unit = 'Sekunden'
     if time > 60:
         time = int(time / 60)
-        unit = 'Minuten'
+        unit = 'Minuten' if time > 1 else 'Minte'
     if time > 60:
         time = int(time / 60)
-        unit = 'Stunden'
+        unit = 'Stunden' if time > 1 else 'Stunde'
     if time > 24:
         time = int(time / 24)
-        unit = 'Tagen'
+        unit = 'Tagen' if time > 1 else 'Tag'
     return 'vor ' + str(time) + ' ' + unit
 
 
