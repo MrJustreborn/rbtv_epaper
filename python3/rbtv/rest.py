@@ -8,12 +8,14 @@ except ImportError:
     import _thread as thread
 import requests
 import json
+import auth
 
 
-token = '*** REMOVED ***'
 class API:
     def __init__(self):
-        self.headers = {'Authorization': 'Bearer ' + token}
+        self.token = auth.token
+        self.refreshToken = auth.refreshToken
+        self.headers = {'Authorization': 'Bearer ' + self.token}
         self.notifications = []
         self.ws = None
 
@@ -29,6 +31,7 @@ class API:
             print("Auth: ", msg[1])
             if msg[1]['result'] == False:
                 ws.close()
+                self._requestNewToken()
         
         elif msg[0] == 'AC_PING':
             resp = prefix + str(['CA_PONG', msg[1]]).replace("'",'"').replace(' ','')
@@ -37,7 +40,19 @@ class API:
         
         elif msg[0] == 'AC_NOTIFICATION':
             self.notifications.append(msg[1])
-        
+    
+    def _requestNewToken(self):
+        if self.token and self.refreshToken:
+            req = 'https://api.rocketbeans.tv/v1/auth/requestToken'
+            print(req)
+            r = requests.post(req, data = {'refreshtoken':self.refreshToken}, headers = self.headers)
+            data = json.loads(r.text)
+            print("REST: OAuth refresh - ",data['success'])
+            if data['success']:
+                self.token = data['success']['token']['token']
+                self.headers = {'Authorization': 'Bearer ' + self.token}
+        pass
+
     def reloadNotifications(self):
         self.notifications = []
 
@@ -77,10 +92,11 @@ class API:
         print(req)
         r = requests.get(req, headers = self.headers)
         data = json.loads(r.text)
-        print(data['success'])
+        print("REST: self - ",data['success'])
         if data['success']:
             return data
         else:
+            self._requestNewToken()
             return None
 
     def getSchedule(self, today: datetime):
@@ -100,7 +116,7 @@ class API:
         print(req)
         r = requests.get(req, headers = self.headers)
         data = json.loads(r.text)
-        print(data['success'])
+        print("REST: schedule - ",data['success'])
         return data
 
     def getStreamCount(self):
@@ -108,7 +124,7 @@ class API:
         print(req)
         r = requests.get(req, headers = self.headers)
         data = json.loads(r.text)
-        print(data['success'])
+        print("REST: streamCnt - ",data['success'])
         return data
 
     def getBlogPromo(self):
@@ -116,5 +132,5 @@ class API:
         print(req)
         r = requests.get(req, headers = self.headers)
         data = json.loads(r.text)
-        print(data['success'])
+        print("REST: blog - ", data['success'])
         return data
