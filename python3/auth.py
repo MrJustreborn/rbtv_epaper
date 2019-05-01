@@ -1,2 +1,0 @@
-token = '*** REMOVED ***'
-refreshToken = '*** REMOVED ***'

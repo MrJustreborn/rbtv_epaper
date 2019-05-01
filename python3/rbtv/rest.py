@@ -8,14 +8,13 @@ except ImportError:
     import _thread as thread
 import requests
 import json
-import auth
-
+import rbtv.auth as auth
 
 class API:
     def __init__(self):
         self.token = auth.token
         self.refreshToken = auth.refreshToken
-        self.headers = {'Authorization': 'Bearer ' + self.token}
+        self.headers = {'Authorization': 'Bearer ' + auth.token}
         self.notifications = []
         self.ws = None
 
@@ -23,9 +22,10 @@ class API:
         prefix = '42'
         print("WS: ", msg[0])
         if msg[0] == 'AC_AUTHENTICATION_REQ':
-            resp = prefix + str(['CA_AUTHENTICATION', {'appName':'rbtv-page', 'token':token}]).replace("'",'"').replace(' ','')
-            print("WS-SEND: ", resp)
-            ws.send(resp)
+            if self.token:
+                resp = prefix + str(['CA_AUTHENTICATION', {'appName':'rbtv-page', 'token': self.token}]).replace("'",'"').replace(' ','')
+                print("WS-SEND: ", resp)
+                ws.send(resp)
         
         elif msg[0] == 'AC_AUTHENTICATION_RESULT':
             print("Auth: ", msg[1])
@@ -49,8 +49,9 @@ class API:
             data = json.loads(r.text)
             print("REST: OAuth refresh - ",data['success'])
             if data['success']:
-                self.token = data['success']['token']['token']
+                self.token = str(data['data']['token']['token'])
                 self.headers = {'Authorization': 'Bearer ' + self.token}
+                auth.saveNewToken(self.token)
         pass
 
     def reloadNotifications(self):
