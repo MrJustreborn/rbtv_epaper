@@ -31,8 +31,10 @@ class RBTV:
             return self.get_blog_screen(img)
         elif which == "notification":
             return self.get_notification_screen(img, data, idx, size)
+        elif which == "shutdown":
+            return img
         
-        return self.get_current_screen(img)
+        return img
     
     def _draw_header(self, img: Image, today: datetime):
         draw = ImageDraw.Draw(img)
