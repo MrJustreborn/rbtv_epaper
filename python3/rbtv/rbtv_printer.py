@@ -199,7 +199,7 @@ def printUpcomming(img: Image, show, timeStart: datetime, pos, detail = False):
     paddingLeft = 70
     draw.text((10 + paddingLeft, 33 * pos + height), utils.getTime(timeStart) +' '+ title, font = rbtv_config.fontSmall, fill = 0)
     
-    if detail:
+    if detail and (show['topic'] or show['game']):
         detailStr = str((show['topic'] if show['topic'] else show['game']))
         detailStr = utils.string_normalizer(detailStr)
         detailStr = truncateString(draw, detailStr)
