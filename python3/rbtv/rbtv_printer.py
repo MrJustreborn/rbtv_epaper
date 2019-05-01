@@ -18,7 +18,7 @@ def printClock(xy, img: Image, today: datetime):
 
     draw = ImageDraw.Draw(img)
     draw.rectangle((x, y, rbtv_config.screen_width, 65), fill=0)
-    draw.text((x, y - 12), utils.getTime(today), font = rbtv_config.fontBig, fill = 255)
+    draw.text((x, y - 12), utils.getTime(today), font = rbtv_config.fontHuge, fill = 255)
     draw.text((x + 200, y + 3), utils.getWeekday(today), font = rbtv_config.fontSmall, fill = 255)
     draw.text((x + 200, y + 32), utils.getDate(today), font = rbtv_config.fontSmall, fill = 255)
     draw.rectangle((0, 0, 600, 140))

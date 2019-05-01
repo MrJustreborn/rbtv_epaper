@@ -49,7 +49,21 @@ class RBTV:
     def get_boot_screen(self, img: Image):
         self.api.reloadNotifications()
         draw = ImageDraw.Draw(img)
-        draw.text((15, 50), "TODO:\n\nADD START\nSCREEN", font = rbtv_config.fontBig) #twitch
+        img.paste(rbtv_config.boot, (0, 0))
+
+        w, h = draw.textsize(rbtv_config.version, font = rbtv_config.fontVeryTiny)
+        draw.text((600 - w - 5, 448 - h - 2), rbtv_config.version, font = rbtv_config.fontVeryTiny, fill = 255)
+
+        title = "Rocketbeans TV"
+        w, h = draw.textsize(title, font = rbtv_config.fontBig)
+        draw.text((300 - int(w / 2), 12), title, font = rbtv_config.fontBig, fill = 255)
+        title = "ePaper Sendeplan"
+        w, h2 = draw.textsize(title, font = rbtv_config.fontSmall)
+        draw.text((300 - int(w / 2), 12 + h), title, font = rbtv_config.fontSmall, fill = 255)
+
+        title = "@MrJustreborn"
+        w, h = draw.textsize(title, font = rbtv_config.fontVeryTiny)
+        draw.text((5, 448 - h - 2), title, font = rbtv_config.fontVeryTiny, fill = 255)
         return img
 
     def get_notifications(self):
