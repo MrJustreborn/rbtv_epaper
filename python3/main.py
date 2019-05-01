@@ -15,11 +15,15 @@ def main():
         img = rbtv_api.get_layout("boot")
         time.sleep(1)
         notifications = rbtv_api.get_notifications()
+        size = len(notifications)
+        i = 0
         for n in notifications:
-            img = rbtv_api.get_layout("notification", n)
+            i += 1
+            img = rbtv_api.get_layout("notification", n, i, size)
             break
 
         img.show()
+        time.sleep(2)
 
         #img = ImageOps.flip(ImageOps.mirror(img))
         #epd.display(epd.getbuffer(img))

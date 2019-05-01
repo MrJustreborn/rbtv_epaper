@@ -135,17 +135,47 @@ def getTimeDelta(time: int):
     return 'vor ' + str(time) + ' ' + unit
 
 
-def printNotification(xy, img: Image, today: datetime, data):
+def printNotification(xy, img: Image, today: datetime, data, idx: int, size: int):
     if not data.get('data'):
         return
     
     x = xy[0]
     y = xy[1]
 
+    delta = (today - utils.parseTime(data['date'])).total_seconds()
+
     draw = ImageDraw.Draw(img)
 
-    title = str(data['data']['show'])
-    draw.text((x, y), title, font = rbtv_config.fontSmall, fill = 0)
+    title = getTimeDelta(delta) + ' - ' + str(data['data']['show']) + ' / Abonniert: ' + str(data['data']['name'])
+    draw.text((x, y), title, font = rbtv_config.fontTiny, fill = 0)
+
+    yOffset = 25
+    
+    draw.rectangle((0, y + yOffset, 600, y + yOffset + 140), fill = 0)
+    
+    try:
+        r = requests.get(data['data']['thumbnail'][0]['url'])
+        thumbnail = Image.open(BytesIO(r.content))
+
+        maxsize = (250, 140)
+        tn_image = thumbnail.thumbnail(maxsize)
+
+        img.paste(thumbnail, (x, y + yOffset))
+    except:
+        print('could not thumbnail')
+    pass
+
+    _, title = linebreakString(draw, str(data['data']['title']), 5, 310)
+    title = truncateString(draw, title, 310)
+    draw.text((x + 255, y + yOffset), title, font = rbtv_config.fontSmall, fill = 255)
+    
+    number = str(idx) +'/'+ str(size)
+    w,h = draw.textsize(number, font = rbtv_config.fontTiny)
+    draw.text((rbtv_config.screen_width - w - 35, y), number, font = rbtv_config.fontTiny, fill = 0)
+    draw.text((rbtv_config.screen_width - w - 2, y - 2), "", font = rbtv_config.fontAwesome)
+    
+    if data['status'] == 'unread':
+        img.paste(rbtv_config.neu, (rbtv_config.screen_width - 2 - rbtv_config.neu.size[0], y + 162 - rbtv_config.neu.size[1]))
 
 
 
@@ -228,7 +258,6 @@ def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, tod
         maxsize = (250, 140)
         tn_image = img.thumbnail(maxsize)
 
-    #print(img.size, img.size[0])
         image.paste(img, (350, 0))
     except:
         print('could not load episodeImage')
@@ -261,15 +290,16 @@ def linebreakString(draw: ImageDraw, text: str, lines = 2, maxWidth = 370, font 
     w, h = draw.textsize(result, font = font)
     while line < lines:
         while w < maxWidth and i < len(splited):
-            test += str(splited[i])
+            test += str(splited[i]) + ' '
             w, h = draw.textsize(test, font = font)
             if w < maxWidth:
                 result += str(splited[i]) + ' '
-            i += 1
+                i += 1
         result += '\n'
         test = ''
         line += 1
         w, h = draw.textsize(test, font = font)
+
     while i < len(splited):
         twoline = True
         result += str(splited[i]) + ' '
