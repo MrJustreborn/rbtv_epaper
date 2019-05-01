@@ -158,8 +158,8 @@ def printUpcomming(img: Image, show, timeStart: datetime, pos, detail = False):
     width, height = draw.textsize(utils.getTime(timeStart), font = rbtv_config.fontSmall)
     
     title = str(show['title'])
-    if not detail:
-        title = title +' - '+ (show['topic'] if show['topic'] else show['game'])
+    if not detail and (show['topic'] or show['game']):
+        title = title +' - '+ str(show['topic'] if show['topic'] else show['game'])
     title = utils.string_normalizer(title)
     title = truncateString(draw, title)
 
