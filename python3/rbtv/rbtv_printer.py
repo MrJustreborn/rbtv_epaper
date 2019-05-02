@@ -1,6 +1,6 @@
 
 import time
-from datetime import datetime,timedelta
+from datetime import datetime
 import calendar
 
 from PIL import Image,ImageDraw,ImageFont
@@ -125,13 +125,15 @@ def getTimeDelta(time: int):
     unit = 'Sekunden'
     if time > 60:
         time = int(time / 60)
-        unit = 'Minuten' if time > 1 else 'Minte'
-    if time > 60:
-        time = int(time / 60)
-        unit = 'Stunden' if time > 1 else 'Stunde'
-    if time > 24:
-        time = int(time / 24)
-        unit = 'Tagen' if time > 1 else 'Tag'
+        unit = 'Minuten' if time > 1 else 'Minute'
+    
+        if time > 60:
+            time = int(time / 60)
+            unit = 'Stunden' if time > 1 else 'Stunde'
+        
+            if time > 24:
+                time = int(time / 24)
+                unit = 'Tagen' if time > 1 else 'Tag'
     return 'vor ' + str(time) + ' ' + unit
 
 

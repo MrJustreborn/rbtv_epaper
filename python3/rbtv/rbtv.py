@@ -5,7 +5,7 @@ import utils
 import rbtv.rest as rest
 
 import time
-from datetime import datetime,timedelta
+from datetime import datetime
 import calendar
 
 from PIL import Image,ImageDraw,ImageFont
@@ -72,15 +72,15 @@ class RBTV:
         return self.api.getNotifications()
 
     def get_notification_screen(self, img: Image, data, idx: int, size: int):
-        rbtv_printer.printNotification((5, 240), img, datetime.today(), data, idx, size)
+        rbtv_printer.printNotification((5, 240), img, datetime.today().astimezone(), data, idx, size)
         return self.get_current_screen(img)
 
     def get_blog_screen(self, img: Image):
-        rbtv_printer.printBlog((5, 250), img, datetime.today(), self.api.getBlogPromo())
+        rbtv_printer.printBlog((5, 250), img, datetime.today().astimezone(), self.api.getBlogPromo())
         return self.get_current_screen(img)
 
     def get_current_screen(self, img: Image, upcoming = False, detail = False) -> Image:
-        today = datetime.today()
+        today = datetime.today().astimezone()
         data = self.api.getSchedule(today)
 
         draw = ImageDraw.Draw(img)
@@ -101,8 +101,8 @@ class RBTV:
         hasCurrent = False
         cnt = 3 if detail else 6
         for i in range(len(shows)):
-            timeStart = utils.parseTime(shows[i]['timeStart']) + timedelta(hours=2)
-            timeEnd = utils.parseTime(shows[i]['timeEnd']) + timedelta(hours=2)
+            timeStart = utils.parseTime(shows[i]['timeStart'])
+            timeEnd = utils.parseTime(shows[i]['timeEnd'])
 
             if timeEnd < today:
                 continue

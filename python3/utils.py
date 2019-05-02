@@ -2,7 +2,7 @@
 from datetime import datetime
 
 def parseTime(date: datetime):
-    return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%f%z").astimezone()
 
 def string_normalizer(str: str):
     return str.replace('’', "'").replace('∙','-')
