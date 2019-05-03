@@ -43,16 +43,18 @@ class API:
     
     def _requestNewToken(self):
         if self.token and self.refreshToken:
-            req = 'https://api.rocketbeans.tv/v1/auth/requestToken'
-            print(req)
-            r = requests.post(req, data = {'refreshtoken':self.refreshToken}, headers = self.headers)
-            data = json.loads(r.text)
-            print("REST: OAuth refresh - ",data['success'])
-            if data['success']:
-                self.token = str(data['data']['token']['token'])
-                self.headers = {'Authorization': 'Bearer ' + self.token}
-                auth.saveNewToken(self.token)
-        pass
+            try:
+                req = 'https://api.rocketbeans.tv/v1/auth/requestToken'
+                print(req)
+                r = requests.post(req, data = {'refreshtoken':self.refreshToken}, headers = self.headers, timeout = 2)
+                data = json.loads(r.text)
+                print("REST: OAuth refresh - ",data['success'])
+                if data['success']:
+                    self.token = str(data['data']['token']['token'])
+                    self.headers = {'Authorization': 'Bearer ' + self.token}
+                    auth.saveNewToken(self.token)
+            except:
+                print('no internet - TODO: CACHE DATA')
 
     def reloadNotifications(self):
         self.notifications = []
@@ -89,13 +91,16 @@ class API:
         return self.notifications
 
     def getSelf(self):
-        req = 'https://api.rocketbeans.tv/v1/user/self'
-        print(req)
-        r = requests.get(req, headers = self.headers)
-        data = json.loads(r.text)
-        print("REST: self - ",data['success'])
-        if data['success']:
-            return data
+        try:
+            req = 'https://api.rocketbeans.tv/v1/user/self'
+            print(req)
+            r = requests.get(req, headers = self.headers, timeout = 2)
+            data = json.loads(r.text)
+            print("REST: self - ",data['success'])
+            if data['success']:
+                return data
+        except:
+            print('no internet - TODO: CACHE DATA')
         else:
             self._requestNewToken()
             return None
@@ -112,26 +117,37 @@ class API:
         timestamp2 = datetime.timestamp(withouttime)
 
         print(int(timestamp), int(timestamp2))
-
-        req = 'https://api.rocketbeans.tv/v1/schedule/normalized?startDay=' +str(int(timestamp))+ '&endDay=' +str(int(timestamp2))
-        print(req)
-        r = requests.get(req, headers = self.headers)
-        data = json.loads(r.text)
-        print("REST: schedule - ",data['success'])
-        return data
+        try:
+            req = 'https://api.rocketbeans.tv/v1/schedule/normalized?startDay=' +str(int(timestamp))+ '&endDay=' +str(int(timestamp2))
+            print(req)
+            r = requests.get(req, headers = self.headers, timeout = 2)
+            data = json.loads(r.text)
+            print("REST: schedule - ",data['success'])
+            return data
+        except:
+            print('no internet - TODO: CACHE DATA')
+        return {'success':False,'data':[]}
 
     def getStreamCount(self):
-        req = 'https://api.rocketbeans.tv/StreamCount'
-        print(req)
-        r = requests.get(req, headers = self.headers)
-        data = json.loads(r.text)
-        print("REST: streamCnt - ",data['success'])
-        return data
-
+        try:
+            req = 'https://api.rocketbeans.tv/StreamCount'
+            print(req)
+            r = requests.get(req, headers = self.headers, timeout = 2)
+            data = json.loads(r.text)
+            print("REST: streamCnt - ",data['success'])
+            return data
+        except:
+            print('no internet - TODO: CACHE DATA')
+        return {'success':False,'data':{'total': '-NO NETWORK-','twitch': '-?-','youtube': '-?-'}}
+    
     def getBlogPromo(self):
-        req = 'https://api.rocketbeans.tv/v1/blog/promo/all?offset=0&limit=2'
-        print(req)
-        r = requests.get(req, headers = self.headers)
-        data = json.loads(r.text)
-        print("REST: blog - ", data['success'])
-        return data
+        try:
+            req = 'https://api.rocketbeans.tv/v1/blog/promo/all?offset=0&limit=2'
+            print(req)
+            r = requests.get(req, headers = self.headers, timeout = 2)
+            data = json.loads(r.text)
+            print("REST: blog - ", data['success'])
+            return data
+        except:
+            print('no internet - TODO: CACHE DATA')
+        return {'success':False,'data':[]}

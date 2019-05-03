@@ -90,7 +90,7 @@ class RBTV:
 
         self._draw_header(img, today)
 
-        print(utils.parseTime(data['data'][0]['date']))
+        #print(utils.parseTime(data['data'][0]['date']))
 
         shows = []
 
