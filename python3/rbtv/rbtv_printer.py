@@ -244,7 +244,8 @@ def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, tod
 
 
     title = str(show['title'])
-    title = title +' - '+ (show['topic'] if show['topic'] else show['game'])
+    if show['topic'] or show['game']:
+        title = title +' - '+ str(show['topic'] if show['topic'] else show['game'])
     title = utils.string_normalizer(title)
     title = truncateString(draw, title, 500)
 
