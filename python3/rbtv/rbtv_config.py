@@ -19,6 +19,7 @@ boot = Image.open(img + '/boot.png')
 live = Image.open(img + '/live.bmp')
 neu = Image.open(img + '/neu.bmp')
 abonniert = Image.open(img + '/abonniert.bmp')
+streamExclusive = Image.open(img + '/ohne_vod.bmp')
 
 preview_placeholder = Image.open(img + '/placeholder.bmp')
 

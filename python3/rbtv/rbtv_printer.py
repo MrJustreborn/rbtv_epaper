@@ -214,6 +214,8 @@ def printUpcomming(img: Image, show, timeStart: datetime, pos, detail = False):
     
     if detail and show.get('isSubscribed', False):
         img.paste(rbtv_config.abonniert, (10, 33 * pos + height + 32))
+    if detail and show.get('streamExclusive', False):
+        img.paste(rbtv_config.streamExclusive, (10, 33 * pos + height + 32))
 
 
 def printCurrent(image: Image, show, timeStart: datetime, timeEnd: datetime, today: datetime, font = rbtv_config.fontSmall):
