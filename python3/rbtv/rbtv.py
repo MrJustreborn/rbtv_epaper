@@ -72,15 +72,18 @@ class RBTV:
         return self.api.getNotifications()
 
     def get_notification_screen(self, img: Image, data, idx: int, size: int):
-        rbtv_printer.printNotification((5, 240), img, datetime.today().astimezone(), data, idx, size)
+        #rbtv_printer.printNotification((5, 240), img, datetime.today().astimezone(), data, idx, size) #requires pyhton 3.6
+        rbtv_printer.printNotification((5, 240), img, datetime.today(), data, idx, size)
         return self.get_current_screen(img)
 
     def get_blog_screen(self, img: Image):
-        rbtv_printer.printBlog((5, 250), img, datetime.today().astimezone(), self.api.getBlogPromo())
+        #rbtv_printer.printBlog((5, 250), img, datetime.today().astimezone(), self.api.getBlogPromo()) #requires pyhton 3.6
+        rbtv_printer.printBlog((5, 250), img, datetime.today(), self.api.getBlogPromo())
         return self.get_current_screen(img)
 
     def get_current_screen(self, img: Image, upcoming = False, detail = False) -> Image:
-        today = datetime.today().astimezone()
+        #today = datetime.today().astimezone() #requires pyhton 3.6
+        today = datetime.today()
         data = self.api.getSchedule(today)
 
         draw = ImageDraw.Draw(img)
