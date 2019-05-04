@@ -136,7 +136,35 @@ def getTimeDelta(time: int):
                 unit = 'Tagen' if time > 1 else 'Tag'
     return 'vor ' + str(time) + ' ' + unit
 
-
+upload = {
+    "type":3,
+    "id":7296638,
+    "date":"2019-05-04T12:53:52.000Z",
+    "status":"unread",
+    "data":{
+        "mgmtid":6,
+        "name":"Budi",
+        "title":"\"Lacht ihr über uns, lacht ihr über euch!\" | Battletoads mit Budi & Ian #03","show":"Let’s Play",
+            "id":10648,
+            "thumbnail":[
+                {"height":0,"width":0,"name":"ytsmall","url":"https://img.youtube.com/vi/rl5XvfpQtow/mqdefault.jpg"},
+                {"height":0,"width":0,"name":"ytbig","url":"https://img.youtube.com/vi/rl5XvfpQtow/maxresdefault.jpg"}]
+            }
+    }
+live = {
+    "type":6,
+    "id":7300613,
+    "date":"2019-05-04T18:00:30.000Z",
+    "status":"unread",
+    "data":{
+        "mgmtid":6,
+        "name":"Budi",
+        "title":"Almost Daily #376",
+        "show":"Almost Daily",
+        "id":92,
+        "thumbnail":"https://s3-eu-west-1.amazonaws.com/static.rocketbeans.tv/s/10be5bdefe0aba892b267e7226b1af98.jpeg"
+        }
+    }
 def printNotification(xy, img: Image, today: datetime, data, idx: int, size: int):
     if not data.get('data'):
         return
@@ -156,7 +184,11 @@ def printNotification(xy, img: Image, today: datetime, data, idx: int, size: int
     draw.rectangle((0, y + yOffset, 600, y + yOffset + 140), fill = 0)
     
     try:
-        r = requests.get(data['data']['thumbnail'][0]['url'])
+        f = None
+        if isinstance(data['data']['thumbnail'], list):
+            r = requests.get(data['data']['thumbnail'][0]['url'])
+        else:
+            r = requests.get(data['data']['thumbnail'])
         thumbnail = Image.open(BytesIO(r.content))
 
         maxsize = (250, 140)
