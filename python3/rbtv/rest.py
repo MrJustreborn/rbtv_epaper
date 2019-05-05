@@ -88,7 +88,16 @@ class API:
         thread.start_new_thread(run, ())
     
     def getNotifications(self):
-        return self.notifications
+        return self._filterNotifications()#self.notifications
+    
+    def _filterNotifications(self):
+        notification = []
+
+        for n in self.notifications:
+            if n['type'] == 3: #3 = new upload / 6 = live
+                notification.append(n)
+        
+        return notification
 
     def getSelf(self):
         try:
