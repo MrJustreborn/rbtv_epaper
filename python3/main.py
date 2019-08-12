@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
 
-#import epd5in83
+import epd5in83
 import traceback
 import rbtv.rbtv as rbtv
+from PIL import ImageOps
 import time
 
 def main():
@@ -68,5 +69,56 @@ def cycle():
         print('traceback.format_exc():\n%s',traceback.format_exc())
         exit()
 
+def draw(img, epd, sleep = True):
+    epd.init()
+    img = ImageOps.flip(ImageOps.mirror(img))
+    epd.display(epd.getbuffer(img))
+    epd.sleep()
+
+def boot():
+    try:
+        epd = epd5in83.EPD()
+        rbtv_api = rbtv.RBTV()
+
+        img = rbtv_api.get_layout("boot")
+
+        draw(img, epd)
+
+        time.sleep(2)
+    
+    except:
+        print('traceback.format_exc():\n%s',traceback.format_exc())
+        exit()
+
+def cycle_infinite():
+    try:
+        epd = epd5in83.EPD()
+
+        while True:
+            rbtv_api = rbtv.RBTV()
+
+            img = rbtv_api.get_layout("upcoming")
+            draw(img, epd)
+            time.sleep(5)
+
+            img = rbtv_api.get_layout("upcoming-detail")
+            draw(img, epd)
+            time.sleep(5)
+
+            img = rbtv_api.get_layout("blog")
+            draw(img, epd)
+            time.sleep(5)
+
+            notifications = rbtv_api.get_notifications()
+            for n in notifications:
+                img = rbtv_api.get_layout("notification", n)
+                draw(img, epd)
+                time.sleep(2)
+    
+    except:
+        print('traceback.format_exc():\n%s',traceback.format_exc())
+        exit()
+
 if __name__ == "__main__":
-    main()
+    boot()
+    cycle_infinite()
