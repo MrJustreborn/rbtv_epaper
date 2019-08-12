@@ -14,6 +14,6 @@ echo $pwdesc
 
 sed -e "s/WORKING_DIR/$pwdesc/g" service.template > rbtv_schedule.service
 
-sudo cp rbtv_schedule.service /etc/systemd/user/
+sudo cp rbtv_schedule.service /etc/systemd/system/
 sudo systemctl enable rbtv_schedule.service
 sudo systemctl start rbtv_schedule.service
