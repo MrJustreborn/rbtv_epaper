@@ -17,6 +17,7 @@ from io import BytesIO
 class RBTV:
     def __init__(self):
         self.api = rest.API()
+        self.api.reloadNotifications()
     
     def get_layout(self, which = "upcoming", data = None, idx = 0, size = 0):
         img = Image.new('1', (rbtv_config.screen_width, rbtv_config.screen_height), 255)
