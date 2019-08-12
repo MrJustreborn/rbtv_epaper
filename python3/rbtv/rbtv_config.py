@@ -25,4 +25,4 @@ preview_placeholder = Image.open(img + '/placeholder.bmp')
 
 screen_width = 600
 screen_height = 448
-version = 'v0.1.0'
+version = 'v0.1.1'
