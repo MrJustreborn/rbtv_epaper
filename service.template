@@ -8,6 +8,7 @@ Type = simple
 PIDFile = /var/run/rbtv_epaper.pid
 ExecStart = WORKING_DIR
 Restart = always
+Environment = "PYTHONUNBUFFERED=true"
 
 [Install]
 WantedBy = multi-user.target
