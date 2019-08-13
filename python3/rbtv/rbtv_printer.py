@@ -200,6 +200,7 @@ def printNotification(xy, img: Image, today: datetime, data, idx: int, size: int
     pass
 
     _, title = linebreakString(draw, str(data['data']['title']), 5, 310)
+    title = utils.string_normalizer(title)
     title = truncateString(draw, title, 310)
     draw.text((x + 255, y + yOffset), title, font = rbtv_config.fontSmall, fill = 255)
     
