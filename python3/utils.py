@@ -3,7 +3,8 @@ from datetime import datetime,timedelta
 
 def parseTime(date: datetime):
     #return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%f%z").astimezone() #requires pyhton 3.6
-    return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ") + timedelta(hours = 2) #UTC -> CEST
+    timeoffset = round((round((datetime.now()-datetime.utcnow()).total_seconds())/1800)/2)
+    return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ") + timedelta(hours = timeoffset) #UTC -> CEST/CET
 
 def string_normalizer(str: str):
     return str.replace('’', "'").replace('∙','-')
