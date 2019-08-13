@@ -11,6 +11,7 @@ with open(tokens) as f:
     token = d.get('token', '*** REMOVED ***')
     refreshToken = d.get('refreshToken', '*** REMOVED ***')
 
-def saveNewToken(token):
+def saveNewToken(aToken):
+    token = aToken
     with open(tokens, 'w') as outfile:
-        json.dump({'token':token, 'refreshToken':refreshToken}, outfile)
+        json.dump({'token':aToken, 'refreshToken':refreshToken}, outfile)
