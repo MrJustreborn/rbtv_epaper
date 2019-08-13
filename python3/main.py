@@ -113,6 +113,7 @@ def cycle_infinite():
             size = len(notifications)
             i = 0
             for n in notifications:
+                i += 1
                 img = rbtv_api.get_layout("notification", n, i, size)
                 draw(img, epd)
                 time.sleep(2)
